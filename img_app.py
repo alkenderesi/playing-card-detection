@@ -12,7 +12,7 @@ def main():
     if output_path and not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    _, _, input_images = next(os.walk(input_path))
+    input_images = next(os.walk(input_path))[2]
 
     for image_name in input_images:
         img = cv2.imread(os.path.join(input_path, image_name))

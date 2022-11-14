@@ -13,14 +13,14 @@ def main():
     capture.set(3, res_x)
     capture.set(4, res_y)
 
-    _, test_frame = capture.read()
+    test_frame = capture.read()[1]
     if test_frame.shape[0] != res_y or test_frame.shape[1] != res_x:
         print(f'Unsupported resolution by webcam: {res_x}x{res_y}', file=sys.stderr)
         capture.release()
         return
 
     while True:
-        _, frame = capture.read()
+        frame = capture.read()[1]
         cards = detect_playing_cards(frame)
         cv2.imshow('Cards', cards)
         key = cv2.waitKey(1)
