@@ -28,7 +28,7 @@ def detect_playing_cards(img):
     for contour in contours:
 
         # Filter contours by area
-        if cv2.contourArea(contour) < img.shape[0] * img.shape[1] * 0.1:
+        if cv2.contourArea(contour) < img.shape[0] * img.shape[1] * 0.025:
             continue
 
         # Find corners
@@ -38,25 +38,31 @@ def detect_playing_cards(img):
         if corners is None:
             continue
 
+        # Invert colors
+        inverted = 255 - gray
+
         # Birds eye view transformation
-        birds_eye = create_birds_eye_view(gray, corners, (250, 350))
+        birds_eye = create_birds_eye_view(inverted, corners, (500, 700))
 
         # Crop rank and suit sections
-        rank_crop, suit_crop = extract_card_properties(birds_eye)
+        rank_crop = birds_eye[0:110, 0:60] # 60x110
+        suit_crop = birds_eye[110:180, 0:60] # 60x70
 
         # Reshape crops for the models
-        rank_crop = rank_crop.reshape(1, 54, 34)
-        suit_crop = suit_crop.reshape(1, 34, 34)
+        rank_crop = rank_crop.reshape(1, 110, 60)
+        suit_crop = suit_crop.reshape(1, 70, 60)
 
         # Predict rank and suit with neural networks
         rank_pred = RANK_MODEL.predict(rank_crop, verbose=0)
         suit_pred = SUIT_MODEL.predict(suit_crop, verbose=0)
 
-        # Get ids by highest certainty
+        # Get ids and confidences
         rank = np.argmax(rank_pred)
         suit = np.argmax(suit_pred)
+        rank_conf = np.around(np.max(rank_pred), 2)
+        suit_conf = np.around(np.max(suit_pred), 2)
 
         # Label the detected card
-        img = create_card_label(img, contour, corners, rank, suit)
+        img = create_card_label(img, contour, corners, rank, rank_conf, suit, suit_conf)
     
     return img

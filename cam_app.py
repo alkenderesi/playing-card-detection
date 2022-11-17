@@ -12,10 +12,11 @@ def main():
     capture = cv2.VideoCapture(device, cv2.CAP_DSHOW)
     capture.set(3, res_x)
     capture.set(4, res_y)
+    capture.set(cv2.CAP_PROP_AUTOFOCUS, 0)
 
     test_frame = capture.read()[1]
     if test_frame.shape[0] != res_y or test_frame.shape[1] != res_x:
-        print(f'Unsupported resolution by webcam: {res_x}x{res_y}', file=sys.stderr)
+        print('Unsupported resolution by webcam: {0}x{1}'.format(res_x, res_y), file=sys.stderr)
         capture.release()
         return
 

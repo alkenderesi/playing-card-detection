@@ -65,25 +65,7 @@ def create_birds_eye_view(img, points, output_shape):
     return birds_eye
 
 
-def extract_card_properties(img):
-    """
-    Extracts rank and suit from the top left corner of a card image.
-    """
-
-    # Edge detection
-    edges = cv2.Canny(img, 100, 200)
-
-    # Binary conversion
-    binary = cv2.threshold(edges, 127, 255, cv2.THRESH_BINARY)[1]
-
-    # Crop card rank and suit
-    rank_crop = binary[0:54, 0:34] # 34x54
-    suit_crop = binary[54:88, 0:34] # 34x34
-
-    return rank_crop, suit_crop
-
-
-def create_card_label(img, contour, corners, rank, suit):
+def create_card_label(img, contour, corners, rank, rank_conf, suit, suit_conf):
     """
     Labels and colors a segmented card.
     """
@@ -92,7 +74,7 @@ def create_card_label(img, contour, corners, rank, suit):
     color = (int((rank + 1) / len(RANKS) * 255), int((suit + 1) / len(SUITS) * 255))
 
     # Draw contour
-    cv2.drawContours(img, [contour], -1, color, 3)
+    cv2.drawContours(img, [contour], -1, color, 4)
 
     # Blank mask
     mask = np.zeros_like(img)
@@ -104,9 +86,9 @@ def create_card_label(img, contour, corners, rank, suit):
     img = cv2.addWeighted(img, 0.95, mask, 0.70, 0)
 
     # Label text
-    label = RANKS[rank] + ' ' + SUITS[suit]
+    label = '{0}: {1}  {2}: {3}'.format(RANKS[rank], str(rank_conf), SUITS[suit], str(suit_conf))
 
     # Draw label
-    cv2.putText(img, label, corners[0][0], cv2.FONT_HERSHEY_SIMPLEX, 3, color, 5)
+    cv2.putText(img, label, corners[0][0], cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
     return img
