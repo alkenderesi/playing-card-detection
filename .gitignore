@@ -1,6 +1,12 @@
 # Output test folder
 out/
 
+# All subfolders in data/
+data/*
+
+# All subfolders in models/
+models/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
