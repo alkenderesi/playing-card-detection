@@ -2,10 +2,16 @@
 out/
 
 # All subfolders in data/
-data/*
+data/*/*
 
 # All subfolders in models/
-models/*
+models/*/*
+
+# Data files
+*.npy
+
+# Image manipulation copy
+data/image_manipulation.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

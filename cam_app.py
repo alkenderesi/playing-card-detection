@@ -9,7 +9,7 @@ def main():
     res_x = int(sys.argv[2])
     res_y = int(sys.argv[3])
 
-    capture = cv2.VideoCapture(device, cv2.CAP_DSHOW)
+    capture = cv2.VideoCapture(device)
     capture.set(3, res_x)
     capture.set(4, res_y)
     capture.set(cv2.CAP_PROP_AUTOFOCUS, 0)

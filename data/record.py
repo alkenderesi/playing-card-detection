@@ -20,7 +20,9 @@ if output_path and not os.path.exists(output_path):
 for i in range(sample_count):
     frame = capture.read()[1]
     cv2.imshow('Frame', frame)
-    cv2.imwrite(f'{output_path}/{i}.jpg', frame)
+    cv2.imwrite('{0}/{1}.jpg'.format(output_path, i), frame)
+    if i % (sample_count / 10) == 0:
+        print('{0}%'.format(i / sample_count * 100))
     key = cv2.waitKey(1)
     if key != -1:
         break
