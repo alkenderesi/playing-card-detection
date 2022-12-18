@@ -1,6 +1,3 @@
-# Output test folder
-out/
-
 # All subfolders in data/
 data/*/*
 
